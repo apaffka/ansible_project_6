@@ -1,0 +1,15 @@
+---
+- name: setup docker
+  hosts: app
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: docker for ubuntu
+      include_role:
+        name: docker_ubuntu
+      when: ansible_distribution == 'Ubuntu'
+    - name: docker for centos
+      include_role:
+        name: docker_centos
+      when: ansible_distribution == 'CentOS'

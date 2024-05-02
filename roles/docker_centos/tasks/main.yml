@@ -1,0 +1,28 @@
+---
+# tasks file for docker_centos
+- name: install required packages
+  package:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+
+- name: add docker repository
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Stable - $basearch
+    baseurl: https://download.docker.com/linux/centos/8/$basearch/stable
+    gpgcheck: yes
+    enabled: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: install docker
+  package:
+    name: docker-ce
+    state: present
+
+- name: start docker service
+  service:
+    name: docker
+    state: started
+    enabled: yes
