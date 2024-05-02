@@ -3,7 +3,7 @@
 192.168.0.26
 
 [database]
-localhost
+localhost postgres_data_dir=/opt/database postgres_version=15
 
 [web]
 localhost

@@ -1,0 +1,35 @@
+---
+# tasks file for postgres
+- name: Add PostgreSQL APT repository key
+  ansible.builtin.apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+- name: Add PostgreSQL APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt/ {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    update_cache: yes
+
+- name: Install PostgreSQL 15 server package
+  ansible.builtin.apt:
+    name: "postgresql-{{ postgres_version }}"
+    state: present
+
+- name: Ensure the data directory exists
+  file:
+    path: "{{ postgres_data_dir }}"
+    state: directory
+    owner: postgres
+    group: postgres
+    mode: '0700'
+
+- name: Configure PostgreSQL data directory
+  ansible.builtin.command: "{{ item }}"
+  with_items:
+    - "sudo -u postgres /usr/lib/postgresql/{{ postgres_version }}/bin/initdb -D {{ postgres_data_dir }}"
+
+- name: Start PostgreSQL service
+  ansible.builtin.service:
+    name: postgresql
+    state: started
+    enabled: yes

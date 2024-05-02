@@ -1,0 +1,6 @@
+- name: install and start postgresql
+  hosts: database
+  become: yes
+
+  roles:
+    - postgres
